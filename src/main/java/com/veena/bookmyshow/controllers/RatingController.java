@@ -37,8 +37,8 @@ public class RatingController {
     }
 
     // Endpoint for getting the average movie rating
-    @GetMapping("/average")
-    public GetAverageMovieResponseDto getAverageMovieRating(@RequestBody GetAverageMovieRequestDto requestDto) {
+    @GetMapping("/average/{movieId}")
+    public GetAverageMovieResponseDto getAverageMovieRating(@PathVariable("movieId") GetAverageMovieRequestDto requestDto) {
         GetAverageMovieResponseDto responseDto = new GetAverageMovieResponseDto();
         try {
             double ratingAvg = ratingService.getAverageRating(requestDto.getMovieId());
