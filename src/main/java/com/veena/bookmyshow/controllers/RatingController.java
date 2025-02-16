@@ -1,6 +1,8 @@
 package com.veena.bookmyshow.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.veena.bookmyshow.dtos.GetAverageMovieRequestDto;
@@ -22,31 +24,31 @@ public class RatingController {
         this.ratingService = ratingService;
     }
 
-    // Endpoint for rating a movie
     @PostMapping("/rate")
-    public RateMovieResponseDto rateMovie(@RequestBody RateMovieRequestDto requestDto) {
+    public ResponseEntity<RateMovieResponseDto> rateMovie(@RequestBody RateMovieRequestDto requestDto) {
         RateMovieResponseDto responseDto = new RateMovieResponseDto();
         try {
             Rating rating = ratingService.rateMovie(requestDto.getUserId(), requestDto.getMovieId(), requestDto.getRating());
             responseDto.setRating(rating);
             responseDto.setResponseStatus(ResponseStatus.SUCCESS);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
             responseDto.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
-        return responseDto;
     }
 
-    // Endpoint for getting the average movie rating
     @GetMapping("/average/{movieId}")
-    public GetAverageMovieResponseDto getAverageMovieRating(@PathVariable("movieId") GetAverageMovieRequestDto requestDto) {
+    public ResponseEntity<GetAverageMovieResponseDto> getAverageMovieRating(@PathVariable("movieId") GetAverageMovieRequestDto requestDto) {
         GetAverageMovieResponseDto responseDto = new GetAverageMovieResponseDto();
         try {
             double ratingAvg = ratingService.getAverageRating(requestDto.getMovieId());
             responseDto.setAverageRating(ratingAvg);
             responseDto.setResponseStatus(ResponseStatus.SUCCESS);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
             responseDto.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         }
-        return responseDto;
     }
 }

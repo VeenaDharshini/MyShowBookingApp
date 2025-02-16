@@ -6,9 +6,15 @@ import com.veena.bookmyshow.dtos.ResponseStatus;
 import com.veena.bookmyshow.models.Show;
 import com.veena.bookmyshow.services.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
+@RestController
+@RequestMapping("/api/shows")
 public class ShowController {
 
     private final ShowService showService;
@@ -18,18 +24,17 @@ public class ShowController {
         this.showService = showService;
     }
 
-    public CreateShowResponseDTO createShow(CreateShowRequestDTO requestDTO) {
+    @PostMapping("/create-show")
+    public ResponseEntity<CreateShowResponseDTO> createShow(@RequestBody CreateShowRequestDTO requestDTO) {
         CreateShowResponseDTO responseDTO = new CreateShowResponseDTO();
         try{
             Show show = showService.createShow(requestDTO.getUserId(), requestDTO.getMovieId(), requestDTO.getScreenId(), requestDTO.getStartTime(), requestDTO.getEndTime(), requestDTO.getPricingConfig(), requestDTO.getFeatures());
-            System.out.println("RESULT SUCCESS: " + show);
             responseDTO.setShow(show);
             responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         }catch(Exception e){
-            // responseDTO.setResponseStatus(null);
-            System.out.println("RESULT EXCEPTIONS: " + e.getMessage());
             responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return responseDTO;
     }
 }

@@ -8,9 +8,15 @@ import com.veena.bookmyshow.models.User;
 import com.veena.bookmyshow.dtos.ResponseStatus;
 import com.veena.bookmyshow.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     UserService userService;
@@ -19,30 +25,33 @@ public class UserController {
         this.userService = userService;
     }
 
-    public SignupUserResponseDTO signupUser(SignupUserRequestDTO requestDTO){
+    @PostMapping("/signup")
+    public ResponseEntity<SignupUserResponseDTO> signupUser(@RequestBody SignupUserRequestDTO requestDTO) {
         SignupUserResponseDTO responseDTO = new SignupUserResponseDTO();
-        try{
+        try {
             User user = userService.signupUser(requestDTO.getName(), requestDTO.getEmail(), requestDTO.getPassword());
             responseDTO.setEmail(user.getEmail());
             responseDTO.setName(user.getName());
             responseDTO.setUserId(user.getId());
             responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
-        }catch(Exception e){
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
             responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
         }
-        return responseDTO;
     }
 
-    public LoginResponseDto login(LoginRequestDto requestDto){
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto){
         LoginResponseDto responseDto = new LoginResponseDto();
         try{
             boolean isLoggedIn = userService.login(requestDto.getEmail(), requestDto.getPassword());
             responseDto.setLoggedIn(isLoggedIn);
             responseDto.setResponseStatus(ResponseStatus.SUCCESS);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         }catch(Exception e){
-            responseDto.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-        return responseDto;
     }
 
 }
