@@ -1,5 +1,8 @@
 package com.veena.bookmyshow.models;
 
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import lombok.EqualsAndHashCode;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
@@ -10,6 +13,7 @@ import jakarta.persistence.Id;
 @Data
 @Entity
 @Table(name = "'user'")
+@EqualsAndHashCode(callSuper = false)
 public class User extends BaseModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +21,6 @@ public class User extends BaseModel{
     private String name;
     private String email;
     private String password;
+    @Enumerated(EnumType.ORDINAL)
+    private UserType userType;
 }

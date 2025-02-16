@@ -8,5 +8,5 @@ import com.veena.bookmyshow.models.ShowSeat;
 
 @Repository
 public interface ShowSeatRepository extends JpaRepository<ShowSeat, Integer> {
-
+    Optional<ShowSeat> findBySeat(Seat seat);
 }

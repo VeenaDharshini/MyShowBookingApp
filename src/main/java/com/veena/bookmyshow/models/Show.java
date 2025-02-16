@@ -1,7 +1,7 @@
 package com.veena.bookmyshow.models;
 
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +15,10 @@ import jakarta.persistence.Table;
 @Data
 @Entity
 @Table(name = "'show'")
+@EqualsAndHashCode(callSuper = false)
 public class Show extends BaseModel{
+    @ManyToOne
+    private Movie movie;
     private Date startTime;
     private Date endTime;
 

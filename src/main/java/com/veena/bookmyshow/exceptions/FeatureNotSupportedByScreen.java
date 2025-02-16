@@ -1,4 +1,7 @@
 package com.veena.bookmyshow.exceptions;
 
-public class FeatureNotSupportedByScreen {
+public class FeatureNotSupportedByScreen extends Exception {
+    public FeatureNotSupportedByScreen(String message){
+        super(message);
+    }
 }
